@@ -1,9 +1,8 @@
 import React from 'react'
 import axios from 'axios'
 import {Card, Form, Button, Container} from 'react-bootstrap'
-import {Navbar, Nav} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
-import Login from './login'
+
 
 class Register extends React.Component{
     constructor () {
@@ -13,7 +12,7 @@ class Register extends React.Component{
             username: "",
             password: "",
             message: "",
-            logged: true
+            logged: false
         }
     }
     Register = event => {
@@ -28,13 +27,9 @@ class Register extends React.Component{
         
         axios.post(url, sendData)
         .then(response => {
-            this.setState({logged: response.data.logged})
+            this.setState({logged: true})
             if (this.state.logged) {
-                let user = response.data.data
-                let token = response.data.token
-                localStorage.setItem("user", JSON.stringify(user))
-                localStorage.setItem("token", token)
-                this.props.history.push("/")
+                this.setState({message: response.data.message})
             } else {
                 this.setState({message: response.data.message})
             }
@@ -47,7 +42,7 @@ class Register extends React.Component{
                 <Card className="col-sm-6 card my-5">
                 <Card.Header className="card-header bg-info text-white text-center">REGISTER</Card.Header>
                 <Card.Body>
-                    { !this.state.logged ? 
+                    { this.state.logged ? 
                         (
                             <div className="alert alert-danger mt-1">
                                 { this.state.message }
@@ -73,7 +68,7 @@ class Register extends React.Component{
                         </Form.Group>
                     </Card.Text>
                     <Button variant="info" type="submit">Submit</Button>
-                    <Nav.Link><Link to='/login'><strong>Already have an account?Login</strong></Link></Nav.Link>
+                    <Link to='/login'><strong>Already have an account?Login</strong></Link>
                     </Form>
                 </Card.Body>
                 </Card>
