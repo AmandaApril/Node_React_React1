@@ -1,10 +1,6 @@
 import React from 'react'
 import axios from 'axios'
 import {Card, Form, Button, Container} from 'react-bootstrap'
-import {Navbar, Nav} from 'react-bootstrap'
-import {Link} from 'react-router-dom'
-import Register from './register'
-
 
 class Login extends React.Component {
     constructor () {
@@ -33,6 +29,7 @@ class Login extends React.Component {
                 let token = response.data.token
                 localStorage.setItem("user", JSON.stringify(user))
                 localStorage.setItem("token", token)
+                console.log("token", token)
                 this.props.history.push("/")
             } else {
                 this.setState({message: response.data.message})
@@ -44,7 +41,7 @@ class Login extends React.Component {
         return(
             <Container className="container d-flex justify-content-center align-items-center">
                 <Card className="col-sm-6 card my-5">
-                <Card.Header className="card-header bg-info text-white text-center"><strong>Login</strong></Card.Header>
+                <Card.Header className="card-header bg-primary text-white text-center">LOGIN</Card.Header>
                 <Card.Body>
                     { !this.state.logged ? 
                         (
@@ -56,7 +53,7 @@ class Login extends React.Component {
                     <Card.Text>
                         <Form.Group controlId="username">
                             <Form.Label>Username</Form.Label>
-                            <Form.Control type="text" placeholder="Username" value={this.state.username}
+                            <Form.Control type="text" placeholder="Enter Username" value={this.state.username}
                             onChange={ev => this.setState({username: ev.target.value})}/>
                         </Form.Group>
                         <Form.Group controlId="password">
@@ -66,8 +63,7 @@ class Login extends React.Component {
                             autoComplete="false" />
                         </Form.Group>
                     </Card.Text>
-                    <Button variant="info" type="submit">Submit</Button>
-                    <Nav.Link><Link to='/register'><strong>Dont have an account?Sign Up</strong></Link></Nav.Link>
+                    <Button variant="primary" type="submit">Submit</Button>
                     </Form>
                 </Card.Body>
                 </Card>
