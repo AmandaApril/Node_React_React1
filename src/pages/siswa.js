@@ -9,6 +9,7 @@ class Siswa extends React.Component {
         this.state = {  
           token:"",
             siswa: [],
+            jur:[],
             id_siswa:"",
             nis:"",
             nama_siswa:"",
@@ -39,12 +40,14 @@ headerConfig = () => {
     }
     handleAdd = () => {
         this.setState({
-                    id_siswa: "",
-                    nis:"",
-                    nama_siswa:"",
-                    kelas:"",
-                    jurusan:"",
-                    poin: "",
+            id_siswa:"",
+            nis:"",
+            nama_siswa:"",
+            kelas:"",
+            jurusan:"",
+            poin:"",
+            search:"",
+            action:"",
                     action: "insert",
                     isModalOpen: true
         })
@@ -52,11 +55,11 @@ headerConfig = () => {
     handleEdit = (item) => {
         this.setState({
                     id_siswa: item.id_siswa,
-                    nis : item.nis,
+                    nis: item.nis,
                     nama_siswa: item.nama_siswa,
                     kelas: item.kelas,
                     jurusan: item.jurusan,
-                    poin : item.poin,
+                    poin: item.poin,
                     action: "update",
                     isModalOpen: true
         })
@@ -68,7 +71,8 @@ headerConfig = () => {
     }
     handleSave = (event) => {
         event.preventDefault();
-        /* menampung data */
+        /* menampung data nid, nama dan poin dari Form
+        ke dalam FormData() untuk dikirim  */
         let url = "";
         if (this.state.action === "insert") {
           url = "http://localhost:2000/siswa/save"
@@ -105,9 +109,22 @@ headerConfig = () => {
           console.log(error);
         });
     }
+    getjurusan = () => {
+      let url = "http://localhost:2000/siswa/jurusan";
+      // mengakses api untuk mengambil data siswa
+      axios.get(url, this.headerConfig())
+      .then(response => {
+        // mengisikan data dari respon API ke array siswa
+        this.setState({jur: response.data.jurusan});
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
     componentDidMount(){
         // method yang pertama kali dipanggil pada saat load page
         this.getsiswa()
+        this.getjurusan()
     }
     findsiswa = (event) => {
         let url = "http://localhost:2000/siswa";
@@ -143,26 +160,26 @@ headerConfig = () => {
         }
     }
     render(){
-        console.log(this.state.siswa)
+        console.log(this.state.jur)
         return(
             <>
             <NavBar />
             <Card>
-                <Card.Header className="card-header bg-info text-white" align={'center'}>Data Siswa</Card.Header>
+                <Card.Header className="card-header bg-info text-white" align={'center'}>Data siswa</Card.Header>
                 <Card.Body>
                 <input type="text" className="form-control mb-2" name="search" value={this.state.search} onChange={this.bind} onKeyUp={this.findsiswa} placeholder="Pencarian..." />
                 <Button variant="success" onClick={this.handleAdd}>
-                    Menambah Data
+                    Tambah Data
                 </Button>
                 <Table striped bordered hover>
                     <thead>
                         <tr>
                             <th>ID</th>  
-                            <th>NIS</th>  
-                            <th>Nama</th>
-                            <th>Kelas</th>  
-                            <th>Jurusan</th>
-                            <th>Poin</th>
+                            <th>NIS</th> 
+                            <th>Nama Siswa</th> 
+                            <th>Kelas</th> 
+                            <th>Jurusan</th>  
+                            <th>Poin</th>  
                             <th>Option</th>
                         </tr>
                     </thead>
@@ -171,11 +188,11 @@ headerConfig = () => {
                         return (  
                         <tr key={index}>  
                             <td>{item.id_siswa}</td>  
-                            <td>{item.nis}</td>  
-                            <td>{item.nama_siswa}</td>
+                            <td>{item.nis}</td>
+                            <td>{item.nama_siswa}</td>  
                             <td>{item.kelas}</td>
-                            <td>{item.jurusan}</td>
-                            <td>{item.poin}</td>        
+                            <td>{item.nama_jurusan}</td>
+                            <td>{item.poin}</td>  
                             <td>  
                             <Button className="btn btn-sm btn-info m-1" data-toggle="modal"  
                             data-target="#modal" onClick={() => this.handleEdit(item)}>  
@@ -196,33 +213,35 @@ headerConfig = () => {
                 
                 <Modal show={this.state.isModalOpen} onHide={this.handleClose}>
                     <Modal.Header closeButton>
-                    <Modal.Title>Form Data Siswa</Modal.Title>
+                    <Modal.Title>Form siswa</Modal.Title>
                     </Modal.Header>
                     <Form onSubmit={this.handleSave}>
                     <Modal.Body>
         
-                        ID  
-                        <input type="number" name="id_siswa" value={this.state.id_siswa} onChange={this.bind}  
+                    ID  <input type="number" name="id_siswa" value={this.state.id_siswa} onChange={this.bind}  
                         className="form-control" required />  
-                        Nis
+                        NIS
                         <input type="text" name="nis" value={this.state.nis} onChange={this.bind}  
-                        className="form-control" required />
-                        Nama
+                        className="form-control" required />  
+                        Nama siswa
                         <input type="text" name="nama_siswa" value={this.state.nama_siswa} onChange={this.bind}  
-                        className="form-control" required /> 
-                        kelas
+                        className="form-control" required />  
+                        Kelas
                         <input type="text" name="kelas" value={this.state.kelas} onChange={this.bind}  
-                        className="form-control" required />
+                        className="form-control" required />  
                         Jurusan
-                        <input type="text" name="jurusan" value={this.state.jurusan} onChange={this.bind}  
-                        className="form-control" required />
-                        Point
-                        <input type="text" name="poin" value={this.state.poin} onChange={this.bind}  
+                            <select name="jurusan" value={this.state.jurusan} onChange={this.bind} className="form-control" required>
+                              {this.state.jur.map((item)=> {  
+                              return ( <option value={item.id_jurusan}>{item.nama_jurusan}</option> )})}
+                            </select>  
+
+                        Poin  
+                        <input type="number" name="poin" value={this.state.poin} onChange={this.bind}  
                         className="form-control" required />  
                         
                     </Modal.Body>
                      <Modal.Footer>
-                     <button className="btn btn-sm btn-success" type="submit">  
+                     <button className="btn-primary btn-sm" type="submit">  
                      Simpan 
                      </button>
                     </Modal.Footer>
