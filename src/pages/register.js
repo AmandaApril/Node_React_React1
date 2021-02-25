@@ -40,7 +40,7 @@ class Register extends React.Component{
         return(
             <Container className="container d-flex justify-content-center align-items-center">
                 <Card className="col-sm-6 card my-5">
-                <Card.Header className="card-header bg-info text-white text-center">REGISTER</Card.Header>
+                <Card.Header className="card-header bg-primary text-white text-center">REGISTER</Card.Header>
                 <Card.Body>
                     { this.state.logged ? 
                         (
@@ -67,9 +67,9 @@ class Register extends React.Component{
                             autoComplete="false" />
                         </Form.Group>
                     </Card.Text>
-                    <Button variant="info" type="submit">Submit</Button>
-                    <Link to='/login'><strong>Already have an account?Login</strong></Link>
+                    <Button variant="primary" type="submit">Submit</Button>
                     </Form>
+                    <center><Button variant="success"><Link to='/login'><strong class="bg-success text-white">Already have an account? LOGIN HERE!</strong></Link></Button></center>
                 </Card.Body>
                 </Card>
             </Container>
