@@ -1,6 +1,9 @@
 import React from 'react'
 import axios from 'axios'
+import Register from './register'
 import {Card, Form, Button, Container} from 'react-bootstrap'
+import {Navbar, Nav} from 'react-bootstrap'
+import {Link} from 'react-router-dom'
 
 class Login extends React.Component {
     constructor () {
@@ -29,8 +32,7 @@ class Login extends React.Component {
                 let token = response.data.token
                 localStorage.setItem("user", JSON.stringify(user))
                 localStorage.setItem("token", token)
-                console.log("token", token)
-                this.props.history.push("/")
+                this.props.history.push("/pegawai")
             } else {
                 this.setState({message: response.data.message})
             }
@@ -66,6 +68,8 @@ class Login extends React.Component {
                     <Button variant="primary" type="submit">Submit</Button>
                     </Form>
                 </Card.Body>
+                <center><p class="bg-success text-white">Dont have an account yet? Register Now!</p></center>
+                <Button variant="primary" type="submit"><Link to="/register"><strong class="text-white">REGISTER</strong></Link></Button>
                 </Card>
             </Container>
         )
